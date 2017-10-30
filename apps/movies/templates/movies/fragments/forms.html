@@ -1,20 +1,19 @@
 {% load widget_tweaks %}
-<form method="post">
+<form enctype="multipart/form-data" method="post" >
     {% csrf_token %}
     {% for field in form %}
-        <div class="row">
-            <div class="{% if field|widget_type == 'clearablefileinput' %} file-field {% endif %} input-field col s12">
+        <div class="row" >
+            {% if field.errors %}
+               {{ field.errors }}
+            {% endif %}
+            <div class="{% if field|widget_type == 'clearablefileinput' %}  browser-default{% endif %} input-field col s12">
+                {% comment %}
+                     De esta manera podemos hacer formularios reutilizables con widget_tweaks,
+                     tambien podemos añadir librerias a nuestro gusto
+                {% endcomment %}
                 {% if field|widget_type == 'clearablefileinput' %}
-                    <div class="btn">
-                        <span>Archivo</span>
-                        {% render_field field %}
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text">
-                    </div>
-                {% elif field|widget_type == 'dateinput' %}
-                    {% render_field field class+="datepicker" %}
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <p class="grey-text"> {{ field.label }} </p>
+                    {% render_field field class+="validate" %}
                 {% else %}
                     {% render_field field class+="validate" %}
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>

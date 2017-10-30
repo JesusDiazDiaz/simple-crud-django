@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from .models import Movies
+from .models import Movies, Categories
 from .forms import MoviesForm, LoginForm
 
 
@@ -38,7 +38,7 @@ def log_in(request):
 @login_required
 def log_out(request):
     logout(request)
-    return redirect('log_in')
+    return redirect('movies:log-in')
 
 
 @login_required
@@ -68,7 +68,8 @@ def movie_create(request, **kwargs):
     # si el diccionario request.POST no esta vacio
     # la instancia se creara con dichos datos, sino estara vacia
     form = MoviesForm(
-        request.POST or None
+        request.POST or None,
+        request.FILES or None
     )
     # Comprobamos que la peticion es del motodo POST
     # y que el formulario es valido
@@ -76,7 +77,7 @@ def movie_create(request, **kwargs):
         # Guardamos el objeto
         form.save()
         # redirigir a una nueva URL
-        return redirect('home')
+        return redirect('movies:home')
     return render(request, 'movies/form.html', {'form': form})
 
 
@@ -84,7 +85,6 @@ def movie_create(request, **kwargs):
 def movie_update(request, **kwargs):
     # recuperamos el objeto a actualizar
     movie = Movies.objects.get(pk=kwargs.get('pk'))
-
     # inicializamos el formulario con el objeto recuperado
     form = MoviesForm(
         request.POST or None,
@@ -92,7 +92,7 @@ def movie_update(request, **kwargs):
     )
     if request.POST and form.is_valid():
         form.save()
-        return redirect('home')
+        return redirect('movies:home')
     return render(request, 'movies/form.html', {'form': form})
 
 
@@ -101,3 +101,9 @@ def movie_delete(request, **kwargs):
     movie = Movies.objects.get(pk=kwargs.get('pk'))
     movie.delete()
     return redirect('movies:home')
+
+
+@login_required
+def category_list(request):
+    categories = Categories.objects.all()
+    return render(request, 'movies/category/category_list.html', {'categories': categories})

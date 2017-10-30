@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+    <style>
+        .errorlist {
+            color: #F44336 !important;
+        }
+    </style>
 </head>
 <body>
 <nav class="light-blue lighten-1" role="navigation">
@@ -17,11 +23,13 @@
         {% if request.user.is_authenticated %}
             <ul class="right hide-on-med-and-down">
                 <li><a href="{% url 'movies:home' %}">Peliculas</a></li>
-                <li><a href="{% comment %}{% url 'movies:category-create' %}{% endcomment %}">Categorias</a></li>
+                <li><a href="{% url 'movies:category-list' %}">Categorias</a></li>
+                <li><a href="{% url 'movies:log-out' %}">Salir </a></li>
             </ul>
             <ul id="nav-mobile" class="side-nav">
                 <li><a href="{% url 'movies:home' %}">Peliculas</a></li>
-                <li><a href="{% comment %}{% url 'movies:category-create' %}{% endcomment %}">Categorias</a></li>
+                <li><a href="{% url 'movies:category-list' %}">Categorias</a></li>
+                <li><a href="{% url 'movies:log-out' %}">Salir </a></li>
             </ul>
             <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
         {% endif %}
@@ -41,7 +49,6 @@
 <script>
     $(document).ready(function () {
         $('select').material_select();
-        Materialize.updateTextFields();
 
          $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month

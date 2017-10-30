@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 # Create your models here.
 
 class BaseName(models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, verbose_name='Nombre')
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -17,7 +17,7 @@ class BaseName(models.Model):
 
 
 class Categories(BaseName):
-    minimum_age = models.IntegerField()
+    minimum_age = models.IntegerField(verbose_name='Edad Minima')
 
     class Meta:
         verbose_name = 'Categoria'
@@ -25,10 +25,10 @@ class Categories(BaseName):
 
 
 class Movies(BaseName):
-    description = models.CharField(max_length=256)
-    image = models.ImageField(upload_to='movies')
-    release_date = models.DateField()
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
+    description = models.CharField(max_length=256, verbose_name='Descripcion')
+    image = models.ImageField(upload_to='movies', verbose_name='Imagen')
+    release_date = models.DateField(verbose_name='Fecha de publicacion')
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, verbose_name='Categoria')
 
     class Meta:
         verbose_name = 'Pelicula'
@@ -39,3 +39,6 @@ class Movies(BaseName):
 
     def get_delete_url(self):
         return reverse_lazy('movies:movies-delete', kwargs={'pk': self.pk})
+
+    def get_detail_url(self):
+        return reverse_lazy('movies:movies-detail', kwargs={'pk': self.pk})
